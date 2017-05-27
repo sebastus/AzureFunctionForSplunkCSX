@@ -1,0 +1,13 @@
+{
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "myEventHubMessage",
+      "direction": "in",
+      "path": "insights-logs-auditevent",
+      "connection": "golive",
+      "consumerGroup": "xx"
+    }
+  ],
+  "disabled": false
+}
