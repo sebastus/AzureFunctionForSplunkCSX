@@ -1,0 +1,12 @@
+{
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "messages",
+      "direction": "in",
+      "path": "insights-logs-execution",
+      "connection": "golive"
+    }
+  ],
+  "disabled": false
+}
