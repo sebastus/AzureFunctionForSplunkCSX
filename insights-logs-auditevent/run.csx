@@ -1,6 +1,9 @@
-using System;
+#load "../shared/sendToSplunk.csx"
 
-public static void Run(string myEventHubMessage, TraceWriter log)
+public static void Run(string[] messages, TraceWriter log)
 {
-    log.Info($"C# Event Hub trigger function processed a message: {myEventHubMessage}");
+    log.Info($"Received {messages.Length} messages from event hub.");
+
+    SendMessagesToSplunk(messages, log).Wait();
+
 }

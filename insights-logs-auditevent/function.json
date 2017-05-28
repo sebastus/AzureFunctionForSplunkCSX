@@ -2,7 +2,7 @@
   "bindings": [
     {
       "type": "eventHubTrigger",
-      "name": "myEventHubMessage",
+      "name": "messages",
       "direction": "in",
       "path": "insights-logs-auditevent",
       "connection": "golive",
