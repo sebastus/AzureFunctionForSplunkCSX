@@ -38,12 +38,20 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
     string newClientContent = "";
     foreach (var message in messages)
     {
-        dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(message, converter);
+        bool parsedOk = true;
+        try {
+            dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(message, converter);
+        } catch (Exception e) {
+            parsedOk = false;
+            log.Info($"Error {e} caught while parsing message: {message}");
+        }
 
-        foreach (var record in obj.records)
-        {
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(record);
-            newClientContent += "{\"event\": " + json + "}";
+        if (parsedOk) {
+            foreach (var record in obj.records)
+            {
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(record);
+                newClientContent += "{\"event\": " + json + "}";
+            }
         }
     }
     HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Post, "https://asplunktest.westus.cloudapp.azure.com:8088/services/collector/event");
