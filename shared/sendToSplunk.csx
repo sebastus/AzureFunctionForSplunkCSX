@@ -39,8 +39,9 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
     foreach (var message in messages)
     {
         bool parsedOk = true;
+        dynamic obj = "";
         try {
-            dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(message, converter);
+            obj = JsonConvert.DeserializeObject<ExpandoObject>(message, converter);
         } catch (Exception e) {
             parsedOk = false;
             log.Info($"Error {e} caught while parsing message: {message}");
