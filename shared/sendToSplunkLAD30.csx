@@ -57,7 +57,7 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
         req.Headers.Add("Authorization", "Splunk 73A24AB7-60DD-4235-BF71-D892AE47F49D");
         req.Content = new StringContent(newClientContent, Encoding.UTF8, "application/json");
         HttpResponseMessage response = await SingleHttpClientInstance.SendToSplunk(req);
-    } catch (Exception e) {
-        log.Info($"Error {e} caught while sending to Splunk.");
+    } catch (System.Net.Http.HttpRequestException e) {
+        log.Info($"Error {e.message} caught while sending to Splunk. Is the Splunk service running?");
     }
 }
