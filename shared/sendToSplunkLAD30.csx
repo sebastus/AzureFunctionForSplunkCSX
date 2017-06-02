@@ -29,7 +29,7 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
 
     string newEvent(string json) {
         var s = "{\"sourcetype\": \"azure_monitor_metrics\",";
-        s += "{\"event\": " + json + "}";
+        s += "\"event\": " + json;
         s += "}";
         return s;
     }
@@ -60,8 +60,8 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
 
     }
 
-    log.info($"New events going to Splunk: {newClientContent}");
-    
+    log.Verbose($"New events going to Splunk: {newClientContent}");
+
     try
     {
         HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Post, "https://asplunktest.westus.cloudapp.azure.com:8088/services/collector/event");
@@ -70,7 +70,11 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
         req.Headers.Add("Authorization", "Splunk 73A24AB7-60DD-4235-BF71-D892AE47F49D");
         req.Content = new StringContent(newClientContent, Encoding.UTF8, "application/json");
         HttpResponseMessage response = await SingleHttpClientInstance.SendToSplunk(req);
-        log.info($"response from Splunk: {response}");
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            log.Info($"StatusCode from Splunk: {response.StatusCode}, and reason: {response.ReasonPhrase}");
+        }
+        
     }
     catch (System.Net.Http.HttpRequestException e)
     {
