@@ -28,12 +28,12 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
 {
 
     string newEvent(string json) {
-        var s = "{\"sourcetype: " + "azure_monitor_metrics";
+        var s = "{\"sourcetype\": " + "azure_monitor_metrics";
         s += "{\"event\": " + json + "}";
         s += "}";
         return s;
     }
-    
+
     var converter = new ExpandoObjectConverter();
 
     ServicePointManager.ServerCertificateValidationCallback =
@@ -60,6 +60,8 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
 
     }
 
+    log.info($"New events going to Splunk: {newClientContent}");
+    
     try
     {
         HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Post, "https://asplunktest.westus.cloudapp.azure.com:8088/services/collector/event");
