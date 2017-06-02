@@ -70,6 +70,7 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
         req.Headers.Add("Authorization", "Splunk 73A24AB7-60DD-4235-BF71-D892AE47F49D");
         req.Content = new StringContent(newClientContent, Encoding.UTF8, "application/json");
         HttpResponseMessage response = await SingleHttpClientInstance.SendToSplunk(req);
+        log.info($"response from Splunk: {response}");
     }
     catch (System.Net.Http.HttpRequestException e)
     {
