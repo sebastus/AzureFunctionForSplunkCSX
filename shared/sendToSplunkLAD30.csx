@@ -38,26 +38,36 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
     string newClientContent = "";
     foreach (var message in messages)
     {
-        try {
+        try
+        {
             dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(message, converter);
 
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
             newClientContent += "{\"event\": " + json + "}";
 
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             log.Info($"Error {e} caught while parsing message: {message}");
         }
 
     }
 
-    try {
+    try
+    {
         HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Post, "https://asplunktest.westus.cloudapp.azure.com:8088/services/collector/event");
         req.Headers.Accept.Clear();
         req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         req.Headers.Add("Authorization", "Splunk 73A24AB7-60DD-4235-BF71-D892AE47F49D");
         req.Content = new StringContent(newClientContent, Encoding.UTF8, "application/json");
         HttpResponseMessage response = await SingleHttpClientInstance.SendToSplunk(req);
-    } catch (System.Net.Http.HttpRequestException e) {
-        log.Info($"Error {e.message} caught while sending to Splunk. Is the Splunk service running?");
+    }
+    catch (System.Net.Http.HttpRequestException e)
+    {
+        log.Info($"Error: \"{e.InnerException.Message}\" was caught while sending to Splunk. Is the Splunk service running?");
+    }
+    catch (Exception f)
+    {
+        log.Info($"Error \"{f.InnerException.Message}\" was caught while sending to Splunk. Unplanned exception.");
     }
 }
