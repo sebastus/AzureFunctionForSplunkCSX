@@ -1,0 +1,46 @@
+{
+    "records": [
+        {
+            "resourceId": "/SUBSCRIPTIONS/743F6ED6-83A8-46F0-822D-EA93B953952D/RESOURCEGROUPS/LINUXDEVRG/PROVIDERS/MICROSOFT.NETWORK/APPLICATIONGATEWAYS/MYAG",
+            "operationName": "ApplicationGatewayAccess",
+            "time": "2017-05-06T01:31:45Z",
+            "category": "ApplicationGatewayAccessLog",
+            "properties": {
+                "instanceId": "ApplicationGatewayRole_IN_0",
+                "clientIP": "107.12.135.187",
+                "clientPort": 65305,
+                "httpMethod": "POST",
+                "requestUri": "/",
+                "requestQuery": "X-AzureApplicationGateway-CACHE-HIT=0",
+                "userAgent": "Mozilla/5.0+(Windows+NT+10.0;+WOW64;+Trident/7.0;+rv:11.0)+like+Gecko",
+                "httpStatus": 502,
+                "httpVersion": "HTTP/1.1",
+                "receivedBytes": 602,
+                "sentBytes": 1639,
+                "timeTaken": 96,
+                "sslEnabled": "off"
+            }
+        },
+        {
+            "resourceId": "/SUBSCRIPTIONS/743F6ED6-83A8-46F0-822D-EA93B953952D/RESOURCEGROUPS/LINUXDEVRG/PROVIDERS/MICROSOFT.NETWORK/APPLICATIONGATEWAYS/MYAG",
+            "operationName": "ApplicationGatewayAccess",
+            "time": "2017-05-06T01:33:46Z",
+            "category": "ApplicationGatewayAccessLog",
+            "properties": {
+                "instanceId": "ApplicationGatewayRole_IN_0",
+                "clientIP": "107.12.135.187",
+                "clientPort": 49502,
+                "httpMethod": "POST",
+                "requestUri": "/",
+                "requestQuery": "X-AzureApplicationGateway-CACHE-HIT=0",
+                "userAgent": "Mozilla/5.0+(Windows+NT+10.0;+WOW64;+Trident/7.0;+rv:11.0)+like+Gecko",
+                "httpStatus": 502,
+                "httpVersion": "HTTP/1.1",
+                "receivedBytes": 642,
+                "sentBytes": 1639,
+                "timeTaken": 94,
+                "sslEnabled": "off"
+            }
+        }
+    ]
+}

@@ -4,9 +4,9 @@
       "type": "eventHubTrigger",
       "name": "messages",
       "direction": "in",
-      "path": "insights-logs-applicationgatewayperformancelog",
+      "path": "my-metrics-linux-vm",
       "connection": "golive"
     }
   ],
-  "disabled": true
+  "disabled": false
 }
