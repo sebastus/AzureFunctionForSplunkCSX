@@ -58,6 +58,6 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
         req.Content = new StringContent(newClientContent, Encoding.UTF8, "application/json");
         HttpResponseMessage response = await SingleHttpClientInstance.SendToSplunk(req);
     } catch (Exception e) {
-        log.Info($"Error {e} caught while sending to Splunk: {message}");
+        log.Info($"Error {e} caught while sending to Splunk.");
     }
 }
