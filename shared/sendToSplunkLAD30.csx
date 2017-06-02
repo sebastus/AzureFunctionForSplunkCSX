@@ -48,7 +48,7 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
         }
         catch (Exception e)
         {
-            log.Info($"Error {e} caught while parsing message: {message}");
+            log.Info($"Error {e.InnerException.Message} caught while parsing message: {message}");
         }
 
     }

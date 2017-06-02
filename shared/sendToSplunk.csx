@@ -27,6 +27,13 @@ public class SingleHttpClientInstance
 static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
 {
 
+    string newEvent(string json) {
+        var s = "{\"sourcetype: " + "azure_monitor_metrics";
+        s += "{\"event\": " + json + "}";
+        s += "}";
+        return s;
+    }
+    
     var converter = new ExpandoObjectConverter();
 
     ServicePointManager.ServerCertificateValidationCallback =
@@ -44,11 +51,11 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
             foreach (var record in obj.records)
             {
                 string json = Newtonsoft.Json.JsonConvert.SerializeObject(record);
-                newClientContent += "{\"event\": " + json + "}";
+                newClientContent += newEvent(json);
             }
 
         } catch (Exception e) {
-            log.Info($"Error {e} caught while parsing message: {message}");
+            log.Info($"Error {e.InnerException.Message} caught while parsing message: {message}");
         }
 
     }
@@ -71,3 +78,4 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
         log.Info($"Error \"{f.InnerException.Message}\" was caught while sending to Splunk. Unplanned exception.");
     }
 }
+
