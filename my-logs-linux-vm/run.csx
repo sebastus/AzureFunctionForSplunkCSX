@@ -1,4 +1,4 @@
-#load "../shared/sendToSplunk.csx"
+#load "../shared/sendToSplunkLAD30.csx"
 
 public static void Run(string[] messages, TraceWriter log)
 {

@@ -1,17 +1,18 @@
 {
-    "time": "2017-06-01T22:20:04.5958070Z",
+    "time": "2017-06-02T17:56:32.0000000Z",
     "resourceId": "/subscriptions/743f6ed6-83a8-46f0-822d-ea93b953952d/resourceGroups/linuxDevRg/providers/Microsoft.Compute/virtualMachines/vm",
-    "timeGrain": "PT5M",
-    "dimensions": {
-        "Tenant": "",
-        "Role": "",
-        "RoleInstance": ""
+    "properties": {
+        "ident": "sudo",
+        "Ignore": "syslog",
+        "Facility": "authpriv",
+        "Severity": "info",
+        "EventTime": "2017-06-02T17:56:32+0000",
+        "SendingHost": "127.0.0.1",
+        "Msg": "pam_unix(sudo:session): session opened for user root by greg(uid=0)",
+        "hostname": "vm",
+        "FluentdIngestTimestamp": "2017-06-02T17:56:32Z"
     },
-    "metricName": "/builtin/Processor/PercentProcessorTime",
-    "total": 20,
-    "minimum": 1,
-    "maximum": 1,
-    "average": 1,
-    "count": 20,
-    "last": 1
+    "category": "authpriv",
+    "level": "info",
+    "operationName": "LinuxSyslogEvent"
 }
