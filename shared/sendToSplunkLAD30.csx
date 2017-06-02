@@ -49,10 +49,15 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
         }
 
     }
-    HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Post, "https://asplunktest.westus.cloudapp.azure.com:8088/services/collector/event");
-    req.Headers.Accept.Clear();
-    req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-    req.Headers.Add("Authorization", "Splunk 73A24AB7-60DD-4235-BF71-D892AE47F49D");
-    req.Content = new StringContent(newClientContent, Encoding.UTF8, "application/json");
-    HttpResponseMessage response = await SingleHttpClientInstance.SendToSplunk(req);
+
+    try {
+        HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Post, "https://asplunktest.westus.cloudapp.azure.com:8088/services/collector/event");
+        req.Headers.Accept.Clear();
+        req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        req.Headers.Add("Authorization", "Splunk 73A24AB7-60DD-4235-BF71-D892AE47F49D");
+        req.Content = new StringContent(newClientContent, Encoding.UTF8, "application/json");
+        HttpResponseMessage response = await SingleHttpClientInstance.SendToSplunk(req);
+    } catch (Exception e) {
+        log.Info($"Error {e} caught while sending to Splunk: {message}");
+    }
 }
