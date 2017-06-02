@@ -1,0 +1,12 @@
+{
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "messages",
+      "direction": "in",
+      "path": "my-logs-linux-vm",
+      "connection": "golive"
+    }
+  ],
+  "disabled": false
+}
