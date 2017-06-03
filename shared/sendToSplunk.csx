@@ -95,16 +95,16 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log, strin
         HttpResponseMessage response = await SingleHttpClientInstance.SendToSplunk(req);
         if (response.StatusCode != HttpStatusCode.OK)
         {
-            log.Info($"StatusCode from Splunk: {response.StatusCode}, and reason: {response.ReasonPhrase}");
+            log.Error($"StatusCode from Splunk: {response.StatusCode}, and reason: {response.ReasonPhrase}");
         }
     }
     catch (System.Net.Http.HttpRequestException e)
     {
-        log.Info($"Error: \"{e.InnerException.Message}\" was caught while sending to Splunk. Is the Splunk service running?");
+        log.Error($"Error: \"{e.InnerException.Message}\" was caught while sending to Splunk. Is the Splunk service running?");
     }
     catch (Exception f)
     {
-        log.Info($"Error \"{f.InnerException.Message}\" was caught while sending to Splunk. Unplanned exception.");
+        log.Error($"Error \"{f.InnerException.Message}\" was caught while sending to Splunk. Unplanned exception.");
     }
 }
 

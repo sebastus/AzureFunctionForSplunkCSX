@@ -1,5 +1,16 @@
 {
     "tracing": {
         "consoleLevel": "info"
-    }
+    },
+    "watchDirectories": [
+        "shared"
+    ],
+    "functions": [
+        "insights-logs-applicationgatewayaccesslog",
+        "insights-logs-auditevent",
+        "insights-logs-networksecuritygroupevent",
+        "insights-logs-workflowruntime",
+        "my-logs-linux-vm",
+        "my-metrics-linux-vm"
+    ]
 }
