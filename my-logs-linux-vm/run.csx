@@ -1,9 +1,9 @@
-#load "../shared/sendToSplunkLAD30.csx"
+#load "../shared/sendToSplunk.csx"
 
 public static void Run(string[] messages, TraceWriter log)
 {
     log.Info($"Received {messages.Length} messages from event hub.");
 
-    SendMessagesToSplunk(messages, log).Wait();
+    SendMessagesToSplunk(messages, log, "azure_monitor_logs").Wait();
 
 }

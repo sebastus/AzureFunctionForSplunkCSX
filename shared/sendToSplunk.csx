@@ -1,4 +1,5 @@
 #r "Newtonsoft.Json"
+#r "System.Net.Http"
 
 using System;
 using System.Dynamic;
@@ -24,11 +25,12 @@ public class SingleHttpClientInstance
     }
 }
 
-static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
+static async Task SendMessagesToSplunk(string[] messages, TraceWriter log, string sourceType = "azure_monitor_logs")
 {
 
     string newEvent(string json) {
-        var s = "{\"sourcetype\": \"azure_monitor_metrics\",";
+        var s = "{";
+        s += "\"sourcetype\": \"" + sourceType + "\",";
         s += "\"event\": " + json;
         s += "}";
         return s;
@@ -45,29 +47,50 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
     string newClientContent = "";
     foreach (var message in messages)
     {
-        try {
+        try
+        {
             dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(message, converter);
 
-            foreach (var record in obj.records)
+            if ( ((IDictionary<string, object>)obj).Keys.Contains("records")) 
+            { 
+                foreach (var record in obj.records)
+                {
+                    string json = Newtonsoft.Json.JsonConvert.SerializeObject(record);
+                    newClientContent += newEvent(json);
+                }
+            } else
             {
-                string json = Newtonsoft.Json.JsonConvert.SerializeObject(record);
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
                 newClientContent += newEvent(json);
             }
-
-        } catch (Exception e) {
-            log.Info($"Error {e.InnerException.Message} caught while parsing message: {message}");
+        }
+        catch (Exception e)
+        {
+            var errorMessage = "";
+            if (e.InnerException == null)
+            {
+                errorMessage = e.Message;
+            }
+            else
+            {
+                errorMessage = e.InnerException.Message;
+            }
+            log.Info($"Error {errorMessage} caught while parsing message: {message}");
         }
 
     }
 
     log.Verbose($"New events going to Splunk: {newClientContent}");
 
+    var splunkAddress = GetEnvironmentVariable("splunkAddress");
+    var splunkToken = GetEnvironmentVariable("splunkToken");
+
     try
     {
-        HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Post, "https://asplunktest.westus.cloudapp.azure.com:8088/services/collector/event");
+        HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Post, splunkAddress);
         req.Headers.Accept.Clear();
         req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        req.Headers.Add("Authorization", "Splunk 73A24AB7-60DD-4235-BF71-D892AE47F49D");
+        req.Headers.Add("Authorization", "Splunk " + splunkToken);
         req.Content = new StringContent(newClientContent, Encoding.UTF8, "application/json");
         HttpResponseMessage response = await SingleHttpClientInstance.SendToSplunk(req);
         if (response.StatusCode != HttpStatusCode.OK)
@@ -85,3 +108,7 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log)
     }
 }
 
+public static string GetEnvironmentVariable(string name)
+{
+    return System.Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
+}
