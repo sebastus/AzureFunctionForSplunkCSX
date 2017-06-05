@@ -57,11 +57,29 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log, strin
             { 
                 foreach (var record in obj.records)
                 {
+                    object resourceId;
+                    ((IDictionary<string, object>)obj).TryGetValue("resourceId", out resourceId);
+
+                    var standardValues = GetStandardValues(((string)resourceId).ToUpper());
+                    record.am_subscriptionId = standardValues["subscriptionId"];
+                    record.am_resourceGroup = standardValues["resourceGroup"];
+                    record.am_resourceType = standardValues["resourceType"];
+                    record.am_resourceName = standardValues["resourceName"];
+
                     string json = Newtonsoft.Json.JsonConvert.SerializeObject(record);
                     newClientContent += newEvent(json);
                 }
             } else
             {
+                object resourceId;
+                ((IDictionary<string, object>)obj).TryGetValue("resourceId", out resourceId);
+
+                var standardValues = GetStandardValues(((string)resourceId).ToUpper());
+                obj.am_subscriptionId = standardValues["subscriptionId"];
+                obj.am_resourceGroup = standardValues["resourceGroup"];
+                obj.am_resourceType = standardValues["resourceType"];
+                obj.am_resourceName = standardValues["resourceName"];
+
                 string json = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
                 newClientContent += newEvent(json);
             }
