@@ -1,0 +1,12 @@
+{
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "messages",
+      "direction": "in",
+      "path": "insights-metrics-pt1m",
+      "connection": "golive"
+    }
+  ],
+  "disabled": false
+}
