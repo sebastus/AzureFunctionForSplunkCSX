@@ -80,7 +80,7 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log, strin
 
     }
 
-    log.Bollux($"New events going to Splunk: {newClientContent}");
+    log.Verbose($"New events going to Splunk: {newClientContent}");
 
     var splunkAddress = GetEnvironmentVariable("splunkAddress");
     var splunkToken = GetEnvironmentVariable("splunkToken");
