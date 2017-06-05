@@ -11,7 +11,6 @@
         "insights-logs-networksecuritygroupevent",
         "insights-logs-workflowruntime",
         "my-logs-linux-vm",
-        "my-metrics-linux-vm",
         "insights-metrics-pt1m"
     ]
 }

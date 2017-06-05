@@ -2,10 +2,12 @@
 #r "System.Net.Http"
 
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -111,4 +113,32 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log, strin
 public static string GetEnvironmentVariable(string name)
 {
     return System.Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
+}
+
+public static System.Collections.Generic.Dictionary<string, string> GetStandardValues(string resourceId)
+{
+    var patternSubscriptionId = "SUBSCRIPTIONS\\/(.*?)\\/";
+    var patternResourceGroup = "SUBSCRIPTIONS\\/(?:.*?)\\/RESOURCEGROUPS\\/(.*?)\\/";
+    var patternResourceType = "PROVIDERS\\/(.*?\\/.*?)(?:\\/)";
+    var patternResourceName = "PROVIDERS\\/(?:.*?\\/.*?\\/)(.*?)(?:\\/|$)";
+
+    System.Collections.Generic.Dictionary<string, string> values = new System.Collections.Generic.Dictionary<string, string>();
+    
+    Match m = Regex.Match(resourceId, patternSubscriptionId);
+    var subscriptionID = m.Groups[1].Value;
+    values.Add("subscriptionId", subscriptionID);
+
+    m = Regex.Match(resourceId, patternResourceGroup);
+    var resourceGroup = m.Groups[1].Value;
+    values.Add("resourceGroup", resourceGroup);
+
+    m = Regex.Match(resourceId, patternResourceType);
+    var resourceType = m.Groups[1].Value;
+    values.Add("resourceType", resourceType);
+
+    m = Regex.Match(resourceId, patternResourceName);
+    var resourceName = m.Groups[1].Value;
+    values.Add("resourceName", resourceName);
+
+    return values;
 }
