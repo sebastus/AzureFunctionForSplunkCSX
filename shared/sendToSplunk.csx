@@ -40,6 +40,8 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log, strin
 
     var converter = new ExpandoObjectConverter();
 
+    ServicePointManager.Expect100Continue = true;
+    ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
     ServicePointManager.ServerCertificateValidationCallback =
     new System.Net.Security.RemoteCertificateValidationCallback(
         delegate { return true; });
