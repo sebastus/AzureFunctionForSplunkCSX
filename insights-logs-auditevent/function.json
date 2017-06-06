@@ -5,8 +5,7 @@
       "name": "messages",
       "direction": "in",
       "path": "insights-logs-auditevent",
-      "connection": "golive",
-      "consumerGroup": "xx"
+      "connection": "golive"
     }
   ],
   "disabled": false

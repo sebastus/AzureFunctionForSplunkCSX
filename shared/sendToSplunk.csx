@@ -58,7 +58,7 @@ static async Task SendMessagesToSplunk(string[] messages, TraceWriter log, strin
                 foreach (var record in obj.records)
                 {
                     object resourceId;
-                    ((IDictionary<string, object>)obj).TryGetValue("resourceId", out resourceId);
+                    ((IDictionary<string, object>)record).TryGetValue("resourceId", out resourceId);
 
                     var standardValues = GetStandardValues(((string)resourceId).ToUpper());
                     record.am_subscriptionId = standardValues["subscriptionId"];
