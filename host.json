@@ -6,11 +6,6 @@
         "shared"
     ],
     "functions": [
-        "insights-logs-applicationgatewayaccesslog",
-        "insights-logs-auditevent",
-        "insights-logs-networksecuritygroupevent",
-        "insights-logs-workflowruntime",
-        "my-logs-linux-vm",
-        "insights-metrics-pt1m"
+        "insights-logs-workflowruntime"
     ]
 }
