@@ -12,16 +12,26 @@ using System.Threading;
 using System.Threading.Tasks; 
 
 public static async Task SendMessagesToSplunk(string[] myEventHubMessages, TraceWriter log)
-{ 
-    string[] unpackedMessages = unpackMessages(myEventHubMessages, log);
-
-    List<string> listOfStandardizedEvents = new List<string>();
-    foreach (string item in unpackedMessages)
-    {
-        string standardizedMessage = addStandardProperties(item, log);
-        listOfStandardizedEvents.Add(newEvent(standardizedMessage));
+{
+    string[] unpackedMessages = new string[1];
+    try {
+        unpackedMessages = unpackMessages(myEventHubMessages, log);
+    } catch (Exception ex) {
+        log.Error(String.Format("Error {0} caught in unpackMessages.", ex));
     }
-    string[] standardizedEvents = listOfStandardizedEvents.ToArray();
+
+    string[] standardizedEvents = new string[1];
+    try {
+        List<string> listOfStandardizedEvents = new List<string>();
+        foreach (string item in unpackedMessages)
+        {
+            string standardizedMessage = addStandardProperties(item, log);
+            listOfStandardizedEvents.Add(newEvent(standardizedMessage));
+        }
+        standardizedEvents = listOfStandardizedEvents.ToArray();
+    } catch (Exception ex) {
+        log.Error(String.Format("Error {0} caught while adding standard properties.", ex));
+    }
 
     var outputBinding = getEnvironmentVariable("outputBinding");
     log.Info(String.Format("The output binding is {0}", outputBinding));

@@ -1,4 +1,5 @@
-#r "Microsoft.Azure.Relay"
+// loaded Microsoft.Azure.Relay.dll into bin folder of the function
+#r "Microsoft.Azure.Relay.dll"
 #load "newEvent.csx"
 #load "getEnvironmentVariable.csx"
 
