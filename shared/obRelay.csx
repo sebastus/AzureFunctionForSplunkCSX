@@ -1,4 +1,4 @@
-#r "Microsoft.Azure.Relay"
+#r "bin\Microsoft.Azure.Relay.dll"
 #load "newEvent.csx"
 #load "getEnvironmentVariable.csx"
 
