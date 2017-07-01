@@ -15,6 +15,7 @@ static string addStandardProperties(string message, TraceWriter log)
 
     object resourceId;
     ((IDictionary<string, object>)obj).TryGetValue("resourceId", out resourceId);
+    log.Info(String.Format("ResourceId in the incoming message: {0}", resourceId));
 
     var standardProperties = getStandardProperties(((string)resourceId).ToUpper());
     obj.am_subscriptionId = standardProperties["subscriptionId"];
