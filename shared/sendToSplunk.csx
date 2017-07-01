@@ -26,23 +26,32 @@ public static async Task SendMessagesToSplunk(string[] myEventHubMessages, Trace
         foreach (string item in unpackedMessages)
         {
             string standardizedMessage = addStandardProperties(item, log);
-            listOfStandardizedEvents.Add(newEvent(standardizedMessage));
+            if (standardizedMessage != "{}")
+                listOfStandardizedEvents.Add(newEvent(standardizedMessage));
         }
         standardizedEvents = listOfStandardizedEvents.ToArray();
     } catch (Exception ex) {
         log.Error(String.Format("Error {0} caught while adding standard properties.", ex));
     }
 
-    var outputBinding = getEnvironmentVariable("outputBinding");
+    string outputBinding = getEnvironmentVariable("outputBinding");
     log.Info(String.Format("The output binding is {0}", outputBinding));
 
-    if (outputBinding == "Relay") 
+    if (standardizedEvents.Length == 0) {
+        log.Warn("No messages found that could be sent to Splunk.");
+        return;
+    }
+    
+    if (outputBinding.ToUpper() == "RELAY") 
     {
         await obRelay(standardizedEvents, log);
     }
-    else if (outputBinding == "HEC")
+    else if (outputBinding.ToUpper() == "HEC")
     {
         await obHEC(standardizedEvents, log);
+    }
+    else {
+        log.Warn("No or incorrect output binding specified. No messages sent to Splunk.");
     }
 }
 

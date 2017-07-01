@@ -15,9 +15,21 @@ static string addStandardProperties(string message, TraceWriter log)
 
     object resourceId;
     ((IDictionary<string, object>)obj).TryGetValue("resourceId", out resourceId);
-    log.Info(String.Format("ResourceId in the incoming message: {0}", resourceId));
+    if (resourceId == null) {
+        log.Info("resourceId not found in incoming message.");
+        return "{}";
+    }
 
     var standardProperties = getStandardProperties(((string)resourceId).ToUpper());
+
+    if (standardProperties["subscriptionId"] == "" ||
+        standardProperties["resourceGroup"] == "" || 
+        standardProperties["resourceType"] == "" || 
+        standardProperties["resourceName"] == "") {
+        log.Warn("Incorrect message format, badly formed resourceId");
+        return "{}";
+    }
+
     obj.am_subscriptionId = standardProperties["subscriptionId"];
     obj.am_resourceGroup = standardProperties["resourceGroup"];
     obj.am_resourceType = standardProperties["resourceType"];
