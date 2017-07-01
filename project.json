@@ -1,0 +1,10 @@
+{
+  "frameworks": {
+    "net46":{
+      "dependencies": {
+        "Microsoft.Azure.Relay": "1.0.0",
+        "Newtonsoft.Json": "9.0.1"
+      }
+    }
+  }
+}
