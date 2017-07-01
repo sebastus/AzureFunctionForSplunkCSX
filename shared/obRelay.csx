@@ -30,12 +30,12 @@ public static async Task obRelay(string[] standardizedEvents, TraceWriter log)
         }
         catch (EndpointNotFoundException)
         {
-            log.Info("Waiting...");
+            log.Verbose("Waiting...");
             Thread.Sleep(1000);
         }
         catch (RelayException)
         {
-            log.Info("Connection forcibly closed.");
+            log.Verbose("Connection forcibly closed.");
         }
         catch (Exception ex)
         {
@@ -51,7 +51,7 @@ static async Task<bool> HybridAsync(string newClientContent, TraceWriter log)
     string KeyName = getEnvironmentVariable("policyName");
     string Key = getEnvironmentVariable("policyKey");
     if (RelayNamespace.Length == 0 || ConnectionName.Length == 0 || KeyName.Length == 0 || Key.Length == 0) {
-        log.Error("Values must be specified for RelayNamespace, relayPath, KeyName and Key.");
+        log.Error("Values must be specified for relayNamespace, relayPath, policyName and policyKey.");
         return true;
     }
 
@@ -63,7 +63,7 @@ static async Task<bool> HybridAsync(string newClientContent, TraceWriter log)
     log.Verbose("Connection accepted.");
 
     int bufferSize = newClientContent.Length;
-    log.Info($"newClientContent byte count: {bufferSize}");
+    log.Verbose($"newClientContent byte count: {bufferSize}");
 
     var writes = Task.Run(async () => {
         var writer = new StreamWriter(relayConnection, Encoding.UTF8, bufferSize) { AutoFlush = true };
