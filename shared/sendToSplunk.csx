@@ -11,7 +11,7 @@ using System.Dynamic;
 using System.Threading;
 using System.Threading.Tasks; 
 
-public static async Task Run(string[] myEventHubMessages, TraceWriter log)
+public static async Task SendMessagesToSplunk(string[] myEventHubMessages, TraceWriter log)
 { 
     string[] unpackedMessages = unpackMessages(myEventHubMessages, log);
 
