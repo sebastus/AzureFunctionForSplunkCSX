@@ -6,6 +6,6 @@
         "shared"
     ],
     "functions": [
-        "insights-logs-workflowruntime"
+        "insights-logs-auditevent"
     ]
 }
