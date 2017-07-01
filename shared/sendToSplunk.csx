@@ -38,10 +38,10 @@ public static async Task SendMessagesToSplunk(string[] myEventHubMessages, Trace
     log.Info(String.Format("The output binding is {0}", outputBinding));
 
     if (standardizedEvents.Length == 0) {
-        log.Warn("No messages found that could be sent to Splunk.");
+        log.Info("No messages found that could be sent to Splunk.");
         return;
     }
-    
+
     if (outputBinding.ToUpper() == "RELAY") 
     {
         await obRelay(standardizedEvents, log);
@@ -51,7 +51,7 @@ public static async Task SendMessagesToSplunk(string[] myEventHubMessages, Trace
         await obHEC(standardizedEvents, log);
     }
     else {
-        log.Warn("No or incorrect output binding specified. No messages sent to Splunk.");
+        log.Info("No or incorrect output binding specified. No messages sent to Splunk.");
     }
 }
 

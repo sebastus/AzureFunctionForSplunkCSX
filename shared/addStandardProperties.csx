@@ -26,7 +26,7 @@ static string addStandardProperties(string message, TraceWriter log)
         standardProperties["resourceGroup"] == "" || 
         standardProperties["resourceType"] == "" || 
         standardProperties["resourceName"] == "") {
-        log.Warn("Incorrect message format, badly formed resourceId");
+        log.Info("Incorrect message format, badly formed resourceId");
         return "{}";
     }
 
