@@ -35,7 +35,7 @@ public static async Task SendMessagesToSplunk(string[] myEventHubMessages, Trace
     }
 
     string outputBinding = getEnvironmentVariable("outputBinding");
-    log.Info(String.Format("The output binding is {0}", outputBinding));
+    log.Verbose(String.Format("The output binding is {0}", outputBinding));
 
     if (standardizedEvents.Length == 0) {
         log.Info("No messages found that could be sent to Splunk.");
