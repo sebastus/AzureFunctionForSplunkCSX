@@ -9,6 +9,9 @@ Here are a few resources if you want to learn more about Azure Monitor:<br/>
 * [Overview of the Azure Activity Log](https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-overview-activity-logs)
 * [Overview of Metrics in Microsoft Azure](https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-overview-metrics)  
 
+## Important Security Note
+The HEC endpoint for a Splunk instance is SSL encrypted. At this time, this function ignores the validity of the certificate. This is currently being worked on and will be released asap.
+
 ## Solution Overview
 ![AzureFunctionPlusHEC](images/AzureFunctionPlusHEC.PNG)
 The image shows only Splunk VM, but the solution targets Splunk Cloud as well. The Splunk VM may be Splunk Enterprise or a Forwarder.  
@@ -25,6 +28,7 @@ Installation and Configuration tasks for the overall solution fall into a few bu
 * Event hubs
 * Splunk instance
 * Azure Function
+* Host.json
 
 ### Diagnostics Profiles
 Each resource to be monitored must have a diagnostics profile created for it. This can be done in the portal, but more likely you'll want to write a script to configure existing resources and update your solution templates to create these profiles upon creation of the resource. Here's a place to start:
@@ -77,4 +81,12 @@ Once the Function App exists, add the Splunk endpoint address and token into set
 * splunkAddress - e.g. https://YOURVM.SOMEREGION.cloudapp.azure.com:8088/services/collector/event
 * splunkToken - e.g. 5F1B2C8F-YOUR-GUID-HERE-CE29A659E7D1
 * outputBinding - HEC
+
+## Host.json
+
+In host.json is an array named "functions". That array lists the functions that should be enabled. There is a function in the master repo for each of the known logs and one for metrics. 
+
+The functions array is seeded with only one function name - that for "insights-logs-workflowruntime". This is because it's very easy to create a logic app and use it to send messages through the system in a onesy-twosy manner for testing. 
+
+Once you know all of the logs that you will be following, enter the names of those functions into the array. If you delete the array, all functions will run. If the function runs but the hub doesn't exist, the function will drop a lot of errors into the function app logs.
 
