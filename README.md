@@ -13,12 +13,29 @@ Here are a few resources if you want to learn more about Azure Monitor:<br/>
 The HEC endpoint for a Splunk instance is SSL encrypted. At this time, this function ignores the validity of the certificate. This is currently being worked on and will be released asap.
 
 ## Solution Overview
+
+At a high level, the Azure Functions approach to delivering telemetry to Splunk does this:
+* Azure resources deliver telemetry to event hubs
+* Azure Function is triggered by these messages
+* Azure Function delivers the messages to Splunk
+
+There are two output bindings, however, that accomodate two scenarios:
+* Splunk on Prem, i.e. behind a proxy server
+* Splunk is cloud-based
+
+Azure Functions are arranged hierarchically as a Function App containing individual functions within. An individual function is triggered by a single event hub. Regarding logs from Azure Monitor, each log category is sent to its own hub. Each Azure Resource Provider that emits logs may emit more than one log category. Similarly, metrics are sent to a hub as configured by the user. Hence, there may be many hubs for the Function App to watch over. These hubs may be in one or more Event Hub Namespaces.
+
+The solution leverages the capacity of an Azure Function to be triggered by arrival of messages to an Event Hub. The messages are aggregated by the Azure Functions back end so they arrive at the function already in a batch where the size of the batch depends on current message volume and settings. The batch is examined, the properties of each event are augmented, and then the events are sent via the selected output binding to the Splunk instance.  
+
+### Cloud-based Splunk using HTTP Event Collector Output Binding
+
 ![AzureFunctionPlusHEC](images/AzureFunctionPlusHEC.PNG)
 The image shows only Splunk VM, but the solution targets Splunk Cloud as well. The Splunk VM may be Splunk Enterprise or a Forwarder.  
 
-The Azure Function leverages the capacity to be triggered by arrival of a message to an Event Hub. Messages are aggregated by the Azure Functions back end so they arrive at the function already in a batch where size depends on current message volume. The batch is examined, the properties augmented, and then the events are POSTed to the HEC endpoint of the Splunk instance.  
+### Premises-based Splunk using Azure Relay Hybrid Connection Output Binding
 
-Azure Functions are arranged hierarchically as a Function App at the top, then individual functions within the Function App. An individual function is triggered by a single event hub. Regarding logs from Azure Monitor, each log category is sent to its own hub. Each Azure Resource Provider that emits logs may emit more than one log category. Similarly, metrics are sent to a hub as configured by the user. Hence, there may be many hubs for the Function App to watch over. These hubs may be in one or more Event Hub Namespaces.
+![AzureFunctionPlusRelay](images/AzureFunctionPlusRelay.PNG)
+This architecture utilizes a different add-on that is enabled get events via Service Bus Relay and then add them to the Splunk index.
 
 ## Installation and Configuration
 
@@ -54,11 +71,21 @@ To create a least permissions policy:
 
 ### Splunk Instance
 
+#### Using HEC output binding
 Configuration of the Splunk instance amounts to opening the HEC endpoint and creating/copying the authentication token. The endpoint address and token value must be entered as settings into the Function App.
 
 Instructions for opening the endpoint and creating/copying the token are on this Splunk webpage:  
 
 [HTTP Event Collector walkthrough](http://dev.splunk.com/view/event-collector/SP-CAAAE7F#usinghttpeventcollector)
+
+#### Using Azure Relay output binding
+Configuration of the Splunk instance involves installing an add-on whose job it is to connect to the Azure Relay Hybrid Connection, receive messages sent over that channel and then add those events to the Splunk instance.
+
+(details coming soon)
+
+Instructions for creating the Azure Relay Hybrid Connection are in the first two steps of this page:
+
+[Get started with Relay Hybrid Connections](https://docs.microsoft.com/en-us/azure/service-bus-relay/relay-hybrid-connections-dotnet-get-started)
 
 
 ### Azure Function
@@ -77,10 +104,19 @@ If you want to automate the creation of your Azure Function, there is a solution
 
 [Azure Function Deployment](https://github.com/sebastus/AzureFunctionDeployment)
 
+#### Using HEC output binding
 Once the Function App exists, add the Splunk endpoint address and token into settings:
+* outputBinding - HEC
 * splunkAddress - e.g. https://YOURVM.SOMEREGION.cloudapp.azure.com:8088/services/collector/event
 * splunkToken - e.g. 5F1B2C8F-YOUR-GUID-HERE-CE29A659E7D1
-* outputBinding - HEC
+
+#### Using Azure Relay output binding
+
+* outputBinding - Relay
+* relayNamespace - namespace prefix of your service bus
+* relayPath - the name of your hybrid connection
+* policyName - SAS key access policy name
+* policyKey - SAS key value
 
 ## Host.json
 
