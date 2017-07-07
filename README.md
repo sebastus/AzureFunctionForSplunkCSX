@@ -35,7 +35,7 @@ The image shows only Splunk VM, but the solution targets Splunk Cloud as well. T
 ### Premises-based Splunk using Azure Relay Hybrid Connection Output Binding
 
 ![AzureFunctionPlusRelay](images/AzureFunctionPlusRelay.PNG)
-This architecture utilizes a different add-on that is enabled get events via Service Bus Relay and then add them to the Splunk index.
+This architecture utilizes a different add-on that is enabled to get events via Service Bus Relay and then add them to the Splunk index.
 
 ## Installation and Configuration
 
@@ -81,7 +81,7 @@ Instructions for opening the endpoint and creating/copying the token are on this
 #### Using Azure Relay output binding
 Configuration of the Splunk instance involves installing an add-on whose job it is to connect to the Azure Relay Hybrid Connection, receive messages sent over that channel and then add those events to the Splunk instance.
 
-(details coming soon)
+This add-on is located [here](https://github.com/sebastus/AzureRelayHCAddonForSplunk). Instructions for installing it are located in the README.md of that repo.
 
 Instructions for creating the Azure Relay Hybrid Connection are in the first two steps of this page:
 
@@ -104,8 +104,10 @@ If you want to automate the creation of your Azure Function, there is a solution
 
 [Azure Function Deployment](https://github.com/sebastus/AzureFunctionDeployment)
 
+Once the Function App exists, add the appropriate values into settings:
+
 #### Using HEC output binding
-Once the Function App exists, add the Splunk endpoint address and token into settings:
+
 * outputBinding - HEC
 * splunkAddress - e.g. https://YOURVM.SOMEREGION.cloudapp.azure.com:8088/services/collector/event
 * splunkToken - e.g. 5F1B2C8F-YOUR-GUID-HERE-CE29A659E7D1
@@ -120,9 +122,9 @@ Once the Function App exists, add the Splunk endpoint address and token into set
 
 ## Host.json
 
-In host.json is an array named "functions". That array lists the functions that should be enabled. There is a function in the master repo for each of the known logs and one for metrics. 
+In host.json is an array named "functions". That array lists the functions that should be executed. There is a function in the master repo for each of the known log categories and one for metrics. 
 
-The functions array is seeded with only one function name - that for "insights-logs-workflowruntime". This is because it's very easy to create a logic app and use it to send messages through the system in a onesy-twosy manner for testing. 
+The functions array is seeded with only one function name as an example - that for "insights-logs-workflowruntime". 
 
 Once you know all of the logs that you will be following, enter the names of those functions into the array. If you delete the array, all functions will run. If the function runs but the hub doesn't exist, the function will drop a lot of errors into the function app logs.
 
