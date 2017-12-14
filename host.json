@@ -4,8 +4,5 @@
     },
     "watchDirectories": [
         "shared"
-    ],
-    "functions": [
-        "insights-logs-workflowruntime"
     ]
 }
