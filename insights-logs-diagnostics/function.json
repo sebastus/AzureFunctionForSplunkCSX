@@ -4,8 +4,8 @@
       "type": "eventHubTrigger",
       "name": "messages",
       "direction": "in",
-      "path": "insights-logs-workflowruntime",
-      "connection": "golive"
+      "path": "insights-logs-diagnostics",
+      "connection": "sbConnectionGolive"
     }
   ],
   "disabled": false
